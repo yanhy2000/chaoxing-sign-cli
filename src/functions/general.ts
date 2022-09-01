@@ -29,13 +29,13 @@ export const GeneralSign = async (uf: string, _d: string, vc3: string, name: str
             
           } else {
             console.log(data)
-            push_str = push_str + `[通用]签到失败,随机延时:${rtime},错误信息:${data}\\n`
+            push_str = push_str + `【通用】签到失败,随机延时:${rtime},错误信息:${data}<br/>`
             resolve(data)
             fs.writeFileSync("temp_PushStr.txt", push_str, { encoding: 'utf-8', flag: 'a' });
             if(pushplus_key!=""){
             setTimeout(() => {
               let data = fs.readFileSync("temp_PushStr.txt")
-              https.get(`https://www.pushplus.plus/send?token=${pushplus_key}&title=cx-签到通知√&content=${data.toString()}`, (res) => {
+              https.get(`https://www.pushplus.plus/send?token=${pushplus_key}&title=cx-签到通知×&content=${data.toString()}`, (res) => {
                 console.log("pushplus推送完成，状态码：",res.statusCode)
               })
             }, 100)}else{console.log("pushplus密钥为空，不推送签到信息")}
