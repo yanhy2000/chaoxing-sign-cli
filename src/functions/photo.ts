@@ -26,7 +26,7 @@ export const PhotoSign = async (uf: string, _d: string, vc3: string, name: strin
           setTimeout(() => {
             let data = fs.readFileSync("temp_PushStr.txt")
             https.get(`https://www.pushplus.plus/send?token=${pushplus_key}&title=cx-签到通知√&content=${data.toString()}`, (res) => {
-              console.log(res.statusCode)
+              console.log("pushplus推送完成，状态码：",res.statusCode)
             })
           }, 100)}else{console.log("pushplus密钥为空，不推送签到信息")}
           return
@@ -38,7 +38,7 @@ export const PhotoSign = async (uf: string, _d: string, vc3: string, name: strin
           setTimeout(() => {
             let data = fs.readFileSync("temp_PushStr.txt")
             https.get(`https://www.pushplus.plus/send?token=${pushplus_key}&title=cx-签到通知×&content=${data.toString()}`, (res) => {
-              console.log(res.statusCode)
+              console.log("pushplus推送完成，状态码：",res.statusCode)
             })
           }, 100)}else{console.log("pushplus密钥为空，不推送签到信息")}
         }

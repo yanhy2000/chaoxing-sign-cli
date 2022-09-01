@@ -155,14 +155,14 @@ export const preSign = async (uf: string, _d: string, vc3: string, activeId: str
           if(signpass.exec(data)!=null){
             sign_code =  `已获取签到手势：${signpass.exec(data)[1]}`
             push_str = push_str + sign_code+"<br/>";
-            console.log(push_str)
+            console.log(sign_code)
           }
         }else if(sign_id == 5){
           //签到码
           if(signcode_rule.exec(data)!=null){
             sign_code =  `已获取签到码：${signcode_rule.exec(data)[1]}`
             push_str = push_str +sign_code+"<br/>";
-            console.log(push_str)
+            console.log(sign_code)
           }
         }
         console.log(`[预签]已请求`+" url:",PRESIGN.URL + `?courseId=${courseId}&classId=${classId}&activePrimaryId=${activeId}&general=1&sys=1&ls=1&appType=15&&tid=&uid=${uid}&ut=s`)
