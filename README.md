@@ -1,5 +1,15 @@
 <h1 align="center">:herb:超星学习通签到:herb:</h1>
 
+原项目：https://github.com/cxOrz/chaoxing-sign-cli
+本项目仅维护自用，因代码随意不规范、功能不一定稳定且仅为满足自己需求，因此不打算和原项目合并或提交代码
+
+本次更新所修改内容：
+- 增加签到随机延时，5-9秒随机
+- 增加签到后推送到pushplus，可在 *src/configs/storage.json* 内手动为指定用户写入 *"pushplus_key":""* 字段，如空则默认禁用，每个用户单独管理是否转发
+- 其他的等我想想还修改了什么...
+
+---
+
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![Licence](https://img.shields.io/github/license/cxOrz/chaoxing-sign-cli?style=for-the-badge)
