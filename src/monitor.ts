@@ -124,6 +124,11 @@ async function configure() {
         type: 'text',
         name: 'address',
         message: '详细地址'
+      },
+      {
+        type: 'text',
+        name: 'pushplus_key',
+        message: 'pushplus推送密钥'
       }
     ], {
       onCancel: () => {
@@ -135,6 +140,7 @@ async function configure() {
     config.monitor.lon = response.lon;
     config.monitor.lat = response.lat;
     config.monitor.address = response.address;
+    config.monitor.pushplus_key = response.pushplus_key;
     fs.writeFile(path.join(__dirname, './configs/storage.json'), JSON.stringify(config), 'utf8', () => { });
   }
   return { ...config.monitor };

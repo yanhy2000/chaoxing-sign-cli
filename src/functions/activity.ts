@@ -1,7 +1,7 @@
 import https from 'https';
 import { ACTIVELIST, PRESIGN } from "../configs/api";
 import { CourseType } from './user';
-
+import fs from 'fs';
 export interface Activity {
   aid: number,
   name: string,
@@ -87,6 +87,8 @@ export const promiseAny = (tasks: Promise<any>[]): Promise<any> => {
  * 
  * @returns 返回一个活动请求 Promise 对象
  */
+var push_str = "";
+var sign_id = 0;
 export function aPromise(course: any, uf: string, _d: string, UID: string, vc3: string): Promise<string | Activity> {
   return new Promise((resolve, reject) => {
     let data: any = ''
@@ -107,7 +109,9 @@ export function aPromise(course: any, uf: string, _d: string, UID: string, vc3: 
             if ((otherId >= 0 && otherId <= 5) && data.data.activeList[0].status == 1) {
               // 活动开始超过一小时则忽略
               if ((new Date().getTime() - data.data.activeList[0].startTime) / 1000 < 7200) {
-                console.log(`检测到活动：${data.data.activeList[0].nameOne}`)
+                console.log(`检测到活动：${data.data.activeList[0].nameOne} 活动id：${otherId}`)
+                push_str = Date()+`<br/> 检测到活动：${data.data.activeList[0].nameOne} 活动id：${otherId}<br/>`
+                sign_id = otherId;
                 resolve({
                   aid: data.data.activeList[0].id,
                   name: data.data.activeList[0].nameOne,
@@ -121,6 +125,7 @@ export function aPromise(course: any, uf: string, _d: string, UID: string, vc3: 
           }
         } else {
           console.log('请求频繁，请待会再试!');
+          push_str = push_str+'请求频繁，请待会再试!<br/>'
           resolve("TooMany");
         }
         reject('Not Available')
@@ -128,6 +133,10 @@ export function aPromise(course: any, uf: string, _d: string, UID: string, vc3: 
     })
   })
 }
+
+//
+var signcode_rule = /if\(connectCode == "(.+)"\)\{/;//签到码
+var signpass = /if\(passwd == "(.+)"\){/;//手势
 
 // 预检请求
 export const preSign = async (uf: string, _d: string, vc3: string, activeId: string | number, classId: string, courseId: string, uid: string) => {
@@ -140,8 +149,27 @@ export const preSign = async (uf: string, _d: string, vc3: string, activeId: str
     }, (res) => {
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
-        console.log(`[预签]已请求`)
+        let sign_code = "未获取签到码或手势"
+        if(sign_id ==3){
+          //手势
+          if(signpass.exec(data)!=null){
+            sign_code =  `已获取签到手势：${signpass.exec(data)[1]}`
+            push_str = push_str + sign_code+"<br/>";
+            console.log(push_str)
+          }
+        }else if(sign_id == 5){
+          //签到码
+          if(signcode_rule.exec(data)!=null){
+            sign_code =  `已获取签到码：${signcode_rule.exec(data)[1]}`
+            push_str = push_str +sign_code+"<br/>";
+            console.log(push_str)
+          }
+        }
+        console.log(`[预签]已请求`+" url:",PRESIGN.URL + `?courseId=${courseId}&classId=${classId}&activePrimaryId=${activeId}&general=1&sys=1&ls=1&appType=15&&tid=&uid=${uid}&ut=s`)
         resolve()
+        push_str = push_str + `【预签】已请求<br/>`
+        fs.writeFileSync("temp_PushStr.txt", push_str,{encoding:'utf-8',flag:'w'});
+        push_str = ""
       })
     })
   })
